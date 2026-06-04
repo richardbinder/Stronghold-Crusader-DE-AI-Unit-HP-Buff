@@ -1,0 +1,12 @@
+{
+	"GUID": "AIUnitHPBuff",
+	"Author": "Copperazide",
+	"Name": "AI Unit HP Buff",
+	"Description": "Allows players to configure an HP multiplier for AI units. This allows you to make AI extra challenging (...or extra weak).",
+	"Version": "1.0.0",
+	"SupportedGameVersions": [
+		"2.5.0.1"
+	],
+	"Website": "https://github.com/richardbinder/Stronghold-Crusader-DE-AI-Unit-HP-Buff",
+	"Manifest": 1
+}
