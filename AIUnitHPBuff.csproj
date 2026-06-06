@@ -1,109 +1,71 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{FE80A27C-F600-4F74-9160-9494609DDA88}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AIUnitHPBuff</RootNamespace>
-    <AssemblyName>AIUnitHPBuff</AssemblyName>
-    <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <Deterministic>true</Deterministic>
-    <TargetFrameworkProfile />
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <ItemGroup>
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net481</TargetFramework>
+        <OutputType>Library</OutputType>
+        <RootNamespace>AIUnitHPBuff</RootNamespace>
+        <AssemblyName>AIUnitHPBuff</AssemblyName>
+        <LangVersion>latest</LangVersion>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <Deterministic>true</Deterministic>
+	  
+        <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+        <CopyLocalDependenciesWhenParentReferenceInGac>false</CopyLocalDependenciesWhenParentReferenceInGac>
+    </PropertyGroup>
+
+    <ItemGroup>
+	    <PackageReference Include="MessagePack" Version="3.1.4" ExcludeAssets="runtime" />
+	    <PackageReference Include="MessagePackAnalyzer" Version="3.1.4" PrivateAssets="all" />
+	    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="10.0.2" ExcludeAssets="runtime" />
+	    <PackageReference Include="System.Memory" Version="4.6.3" ExcludeAssets="runtime" />
+	    <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.6.3" ExcludeAssets="runtime" />
+    </ItemGroup>
+
+    <ItemGroup>
     <Reference Include="0Harmony">
-      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Stronghold Crusader Definitive Edition\BepInEx\core\0Harmony.dll</HintPath>
-      <Private>False</Private>
+        <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Stronghold Crusader Definitive Edition\BepInEx\core\0Harmony.dll</HintPath>
+        <Private>false</Private>
     </Reference>
+
     <Reference Include="BepInEx">
-      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Stronghold Crusader Definitive Edition\BepInEx\core\BepInEx.dll</HintPath>
-      <Private>False</Private>
+        <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Stronghold Crusader Definitive Edition\BepInEx\core\BepInEx.dll</HintPath>
+        <Private>false</Private>
     </Reference>
-    <Reference Include="MessagePack">
-      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Stronghold Crusader Definitive Edition\BepInEx\plugins\000shcdese\MessagePack.dll</HintPath>
-      <Private>False</Private>
+
+    <Reference Include="R3">
+        <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Stronghold Crusader Definitive Edition\BepInEx\plugins\000shcdese\R3.dll</HintPath>
+        <Private>false</Private>
     </Reference>
+
+    <Reference Include="SHCDESE">
+        <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Stronghold Crusader Definitive Edition\BepInEx\plugins\000shcdese\SHCDESE.dll</HintPath>
+        <Private>false</Private>
+    </Reference>
+
+    <Reference Include="UnityEngine">
+        <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Stronghold Crusader Definitive Edition\Stronghold Crusader Definitive Edition_Data\Managed\UnityEngine.dll</HintPath>
+        <Private>false</Private>
+    </Reference>
+
+    <Reference Include="UnityEngine.CoreModule">
+        <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Stronghold Crusader Definitive Edition\Stronghold Crusader Definitive Edition_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+        <Private>false</Private>
+    </Reference>
+
+    <Reference Include="UnityEngine.SharedInternalsModule">
+        <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Stronghold Crusader Definitive Edition\Stronghold Crusader Definitive Edition_Data\Managed\UnityEngine.SharedInternalsModule.dll</HintPath>
+        <Private>false</Private>
+    </Reference>
+
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="R3">
-      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Stronghold Crusader Definitive Edition\BepInEx\plugins\000shcdese\R3.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="SHCDESE">
-      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Stronghold Crusader Definitive Edition\BepInEx\plugins\000shcdese\SHCDESE.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Memory, Version=4.0.5.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Stronghold Crusader Definitive Edition\BepInEx\plugins\000shcdese\System.Memory.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
-    <Reference Include="UnityEngine">
-      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Stronghold Crusader Definitive Edition\Stronghold Crusader Definitive Edition_Data\Managed\UnityEngine.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="UnityEngine.CoreModule">
-      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Stronghold Crusader Definitive Edition\Stronghold Crusader Definitive Edition_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="UnityEngine.SharedInternalsModule">
-      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Stronghold Crusader Definitive Edition\Stronghold Crusader Definitive Edition_Data\Managed\UnityEngine.SharedInternalsModule.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="WindowsBase" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="AIHPLobbySetting.cs" />
-    <Compile Include="Plugin.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Override\Assets\GUI\Sprites\AIUnitHPBuff.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Override\LobbySettings.xaml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include=".gitignore" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="info.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+    </ItemGroup>
+
+    <ItemGroup>
+    <Content Include="Override\Assets\GUI\Sprites\AIUnitHPBuff.png" CopyToOutputDirectory="Always" />
+    <Content Include="Override\LobbySettings.xaml" CopyToOutputDirectory="Always" />
+    <Content Include="info.json" CopyToOutputDirectory="Always" />
+    </ItemGroup>
+
 </Project>

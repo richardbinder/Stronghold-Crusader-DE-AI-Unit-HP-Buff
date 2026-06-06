@@ -12,17 +12,16 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="15"/>
                     <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="10"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Row="0" Grid.Column="0"
-                           Text="AI Unit HP Multiplier"
+                           Text="AI Unit HP"
                            Foreground="White"
                            VerticalAlignment="Center"
                            Margin="0,5"/>
@@ -38,14 +37,14 @@
                          ui:KeyboardCaptureBinding.Enabled="True"/>
 
                 <TextBlock Grid.Row="0" Grid.Column="3"
-                           Text="%"
+                           Text=" %"
                            Foreground="White"
                            VerticalAlignment="Center"
                            HorizontalAlignment="Left"
                            Margin="0"/>
 
-                <TextBlock Grid.Row="0" Grid.Column="5"
-                           Text="1 - 10,000"
+                <TextBlock Grid.Row="1" Grid.Column="2"
+                           Text="1% - 10,000%"
                            Foreground="White"
                            VerticalAlignment="Center"
                            HorizontalAlignment="Left"
@@ -58,7 +57,7 @@
                        Margin="0,5"
                        FontSize="12"/>
 
-            <TextBlock Text="The HP multiplier affects all AI troops and workers. 100% corresponds to the default Unit HP."
+            <TextBlock Text="The HP multiplier affects all AI troops. 100% corresponds to the default Unit HP."
                        Foreground="White"
                        Margin="0,5"
                        FontSize="12"/>
@@ -69,6 +68,11 @@
                        FontSize="12"/>
 
             <TextBlock Text="Example: Setting the multiplier to 300% triples the HP of all AI units in the next game."
+                       Foreground="White"
+                       Margin="0,5"
+                       FontSize="12"/>
+
+            <TextBlock Text="In multiplayer, only the host setting is effective."
                        Foreground="White"
                        Margin="0,5"
                        FontSize="12"/>
