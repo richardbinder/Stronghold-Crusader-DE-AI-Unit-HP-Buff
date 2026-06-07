@@ -1,4 +1,4 @@
-# Stronghold Crusader DE AI Unit HP Buff
+# Stronghold Crusader DE AI Unit Buff
 
 This is a mod for Stronghold Crusader Definitive Edition that buffs AI unit HP and damage.
 
