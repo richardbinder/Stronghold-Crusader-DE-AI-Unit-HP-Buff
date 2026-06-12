@@ -9,6 +9,7 @@ namespace AIUnitBuff {
     public class DebugConfig {
         public ConfigEntry<float> HpMultiplier { get; set; }
         public ConfigEntry<float> DmgMultiplier { get; set; }
+        public ConfigEntry<float> ResourceMultiplier { get; set; }
         public ConfigEntry<bool> DebugConfigOverride { get; set; }
     }
 }

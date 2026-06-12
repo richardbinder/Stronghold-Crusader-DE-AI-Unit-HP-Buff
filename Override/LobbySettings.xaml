@@ -4,7 +4,7 @@
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel Margin="10" IsEnabled="{Binding IsHost}">
 
-            <TextBlock Text="This mod buffs all AI troops with customizable difficulty."
+            <TextBlock Text="This mod buffs AI resource income and AI unit strength with customizable difficulty."
                        Foreground="White"
                        Margin="0,5"/>
 
@@ -101,6 +101,8 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Row="0" Grid.Column="0"
@@ -138,11 +140,29 @@
                            HorizontalAlignment="Left"
                            Margin="0"
                            FontSize="10"/>
+
+                <TextBlock Grid.Row="4" Grid.Column="0"
+                           Text="AI Resource Multiplier"
+                           VerticalAlignment="Center"
+                           Margin="0,5"/>
+
+                <TextBox Grid.Row="4" Grid.Column="2"
+                         Width="80"
+                         Margin="0,5"
+                         Text="{Binding ResourceMultiplierText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                         ui:KeyboardCaptureBinding.Enabled="True"/>
+
+                <TextBlock Grid.Row="5" Grid.Column="2"
+                           Text="1.0 - 100.0"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Left"
+                           Margin="0"
+                           FontSize="10"/>
             </Grid>
 
             <Separator Background="#444466" Margin="0,10"/>
 
-            <TextBlock Text="The multipliers stack with any other HP and Damage modifiers. In multiplayer, only the host setting is effective."
+            <TextBlock Text="The multipliers should stack with any other modifiers. In multiplayer, only the host setting is effective."
                        Foreground="White"
                        TextWrapping="Wrap"
                        Margin="0,5"/>

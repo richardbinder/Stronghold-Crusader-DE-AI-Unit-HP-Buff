@@ -9,10 +9,13 @@ namespace AIUnitBuff {
     public class Constants {
         public const float DefaultHpMultiplier = 1.0f;
         public const float DefaultDmgMultiplier = 1.0f;
+        public const float DefaultResourceMultiplier = 1.0f;
         public const float MinHpMultiplier = 0.01f;
         public const float MaxHpMultiplier = 100.0f;
         public const float MinDmgMultiplier = 0.01f;
         public const float MaxDmgMultiplier = 100.0f;
+        public const float MinResourceMultiplier = 1.0f;
+        public const float MaxResourceMultiplier = 100.0f;
 
         public static float ClampHpMultiplier(float value) {
             if (float.IsNaN(value) || float.IsInfinity(value))
@@ -26,6 +29,13 @@ namespace AIUnitBuff {
                 return DefaultDmgMultiplier;
 
             return Math.Max(MinDmgMultiplier, Math.Min(MaxDmgMultiplier, value));
+        }
+
+        public static float ClampResourceMultiplier(float value) {
+            if (float.IsNaN(value) || float.IsInfinity(value))
+                return DefaultResourceMultiplier;
+
+            return Math.Max(MinResourceMultiplier, Math.Min(MaxResourceMultiplier, value));
         }
 
         public static readonly HashSet<eChimps> CivilianTypes =

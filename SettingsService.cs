@@ -2,15 +2,18 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using BepInEx.Configuration;
 using BepInEx.Logging;
 using MessagePack;
+using SHCDESE.API;
 
 namespace AIUnitBuff {
     internal class SettingsService : IDisposable {
+        private readonly GamePlayerManagerAPI PlayerManager = GamePlayerManagerAPI.Instance;
         private readonly ConfigFile _config;
         private readonly ManualLogSource _logger;
         private readonly FileSystemWatcher _configWatcher;
@@ -19,6 +22,7 @@ namespace AIUnitBuff {
         private bool? _lastDebugConfigOverride;
         private float _lastDebugHpMultiplier = float.NaN;
         private float _lastDebugDmgMultiplier = float.NaN;
+        private float _lastDebugResourceMultiplier = float.NaN;
 
         public SettingsService(ConfigFile config, ManualLogSource logger) {
             _config = config;
@@ -40,14 +44,27 @@ namespace AIUnitBuff {
                 ? DebugDmgMultiplier
                 : Constants.ClampDmgMultiplier(_saveData.DmgMultiplier);
 
+        public float ResourceMultiplier =>
+            Debug.DebugConfigOverride.Value
+                ? DebugResourceMultiplier
+                : Constants.ClampResourceMultiplier(_saveData.ResourceMultiplier);
+
         public float DebugHpMultiplier =>
             Constants.ClampHpMultiplier(Debug.HpMultiplier.Value);
 
         public float DebugDmgMultiplier =>
             Constants.ClampDmgMultiplier(Debug.DmgMultiplier.Value);
 
+        public float DebugResourceMultiplier =>
+            Constants.ClampResourceMultiplier(Debug.ResourceMultiplier.Value);
+
         public bool IsDebugOverrideEnabled =>
             Debug.DebugConfigOverride.Value;
+
+        public bool UsesAIMultipliers(int playerId) {
+            // Debug override allows easy debugging, affects all troops in the map editor.
+            return IsDebugOverrideEnabled || PlayerManager.IsAIPlayer(playerId);
+        }
 
         public void ProcessPendingConfigReload() {
             if (Interlocked.Exchange(ref _configReloadPending, 0) == 0)
@@ -61,10 +78,11 @@ namespace AIUnitBuff {
             }
         }
 
-        public void InitFromLobby(float lobbyHpMultiplier, float lobbyDmgMultiplier) {
+        public void InitFromLobby(float lobbyHpMultiplier, float lobbyDmgMultiplier, float lobbyResourceMultiplier) {
             _saveData = new SaveData {
                 HpMultiplier = Constants.ClampHpMultiplier(lobbyHpMultiplier),
-                DmgMultiplier = Constants.ClampDmgMultiplier(lobbyDmgMultiplier)
+                DmgMultiplier = Constants.ClampDmgMultiplier(lobbyDmgMultiplier),
+                ResourceMultiplier = Constants.ClampResourceMultiplier(lobbyResourceMultiplier)
             };
         }
 
@@ -82,6 +100,7 @@ namespace AIUnitBuff {
 
         public float SavedHpMultiplier => Constants.ClampHpMultiplier(_saveData.HpMultiplier);
         public float SavedDmgMultiplier => Constants.ClampDmgMultiplier(_saveData.DmgMultiplier);
+        public float SavedResourceMultiplier => Constants.ClampResourceMultiplier(_saveData.ResourceMultiplier);
 
         public void Dispose() {
             _configWatcher?.Dispose();
@@ -101,6 +120,13 @@ namespace AIUnitBuff {
                     "DebugDmgMultiplier",
                     Constants.DefaultDmgMultiplier,
                     "Unit damage multiplier"
+                ),
+
+                ResourceMultiplier = _config.Bind(
+                    "Debug",
+                    "DebugResourceMultiplier",
+                    Constants.DefaultResourceMultiplier,
+                    "Stored resource multiplier. Values below 1.0 are not supported because resource drops are amplified by adding extra resources."
                 ),
 
                 DebugConfigOverride = _config.Bind(
@@ -140,18 +166,21 @@ namespace AIUnitBuff {
             bool debugOverride = IsDebugOverrideEnabled;
             float debugHpMultiplier = DebugHpMultiplier;
             float debugDmgMultiplier = DebugDmgMultiplier;
+            float debugResourceMultiplier = DebugResourceMultiplier;
 
             if (_lastDebugConfigOverride == debugOverride &&
                 _lastDebugHpMultiplier == debugHpMultiplier &&
-                _lastDebugDmgMultiplier == debugDmgMultiplier)
+                _lastDebugDmgMultiplier == debugDmgMultiplier &&
+                _lastDebugResourceMultiplier == debugResourceMultiplier)
                 return;
 
             _lastDebugConfigOverride = debugOverride;
             _lastDebugHpMultiplier = debugHpMultiplier;
             _lastDebugDmgMultiplier = debugDmgMultiplier;
+            _lastDebugResourceMultiplier = debugResourceMultiplier;
 
             _logger.LogDebug(
-                $"Debug config loaded: override={debugOverride}, HP multiplier={debugHpMultiplier}, damage multiplier={debugDmgMultiplier}"
+                $"Debug config loaded: override={debugOverride}, HP multiplier={debugHpMultiplier}, damage multiplier={debugDmgMultiplier}, resource multiplier={debugResourceMultiplier}"
             );
         }
     }

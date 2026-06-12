@@ -11,5 +11,6 @@ namespace AIUnitBuff {
     public class SaveData {
         public float HpMultiplier { get; set; } = Constants.DefaultHpMultiplier;
         public float DmgMultiplier { get; set; } = Constants.DefaultDmgMultiplier;
+        public float ResourceMultiplier { get; set; } = Constants.DefaultResourceMultiplier;
     }
 }

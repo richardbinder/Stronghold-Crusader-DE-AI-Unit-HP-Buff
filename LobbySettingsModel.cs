@@ -1,18 +1,19 @@
 using System;
 using System.Globalization;
 using SHCDESE.API.Components.Network;
+using SHCDESE.EventAPI;
 using SHCDESE.ViewModels;
 
 namespace AIUnitBuff {
     public class LobbySettingsModel : LobbyModSettingsBaseViewModel
     {
-        private static readonly (string Name, float DmgMultiplier, float HpMultiplier)[] DifficultyPresets = [
-            ("Easy", 0.8f, 0.8f),
-            ("Normal", 1.0f, 1.0f),
-            ("Hard", 1.2f, 1.5f),
-            ("Very Hard", 1.3f, 1.7f),
-            ("Extreme", 1.4f, 1.9f),
-            ("Impossible", 2.0f, 3.0f)
+        private static readonly (string Name, float DmgMultiplier, float HpMultiplier, float ResourceMultiplier)[] DifficultyPresets = [
+            ("Easy", 0.8f, 0.8f, 1.0f),
+            ("Normal", 1.0f, 1.0f, 1.0f),
+            ("Hard", 1.2f, 1.5f, 1.5f),
+            ("Very Hard", 1.3f, 1.7f, 2.0f),
+            ("Extreme", 1.4f, 1.9f, 2.5f),
+            ("Impossible", 2.0f, 3.0f, 3.0f)
         ];
 
         public DifficultyLabel[] DifficultyNameLabels { get; } =
@@ -20,14 +21,16 @@ namespace AIUnitBuff {
 
         public DifficultyLabel[] DifficultyMultiplierLabels { get; } =
             CreateDifficultyLabels(preset =>
-                $"Dmg: {preset.DmgMultiplier:0.0}x\nHP: {preset.HpMultiplier:0.0}x");
+                $"Dmg: {preset.DmgMultiplier:0.0}x\nHP: {preset.HpMultiplier:0.0}x\nRes: {preset.ResourceMultiplier:0.0}x");
 
         private int _selectedDifficultyIndex = 1;
         private bool _customizeMultipliers;
         private float _hpMultiplier = Constants.DefaultHpMultiplier;
         private float _dmgMultiplier = Constants.DefaultDmgMultiplier;
+        private float _resourceMultiplier = Constants.DefaultResourceMultiplier;
         private string _hpMultiplierText = Constants.DefaultHpMultiplier.ToString("0.0", CultureInfo.InvariantCulture);
         private string _dmgMultiplierText = Constants.DefaultDmgMultiplier.ToString("0.0", CultureInfo.InvariantCulture);
+        private string _resourceMultiplierText = Constants.DefaultResourceMultiplier.ToString("0.0", CultureInfo.InvariantCulture);
 
         [SyncHostOnly]
         public int SelectedDifficultyIndex
@@ -143,15 +146,55 @@ namespace AIUnitBuff {
             }
         }
 
+        [SyncHostOnly]
+        public float ResourceMultiplier
+        {
+            get => _resourceMultiplier;
+            set
+            {
+                float clamped = Constants.ClampResourceMultiplier(value);
+
+                if (_resourceMultiplier == clamped)
+                    return;
+
+                _resourceMultiplier = clamped;
+                _resourceMultiplierText = clamped.ToString("0.###", CultureInfo.InvariantCulture);
+                OnPropertyChanged(nameof(ResourceMultiplier));
+                OnPropertyChanged(nameof(ResourceMultiplierText));
+                OnPropertyChanged(nameof(EffectiveResourceMultiplier));
+            }
+        }
+
+        public string ResourceMultiplierText
+        {
+            get => _resourceMultiplierText;
+            set
+            {
+                if (!TrySetMultiplierText(value, nameof(ResourceMultiplierText), ref _resourceMultiplierText, Constants.ClampResourceMultiplier, Constants.DefaultResourceMultiplier, out bool updateMultiplier, out float clamped))
+                    return;
+
+                if (updateMultiplier)
+                    _resourceMultiplier = clamped;
+
+                OnPropertyChanged(nameof(ResourceMultiplierText));
+                OnPropertyChanged(nameof(ResourceMultiplier));
+                OnPropertyChanged(nameof(EffectiveResourceMultiplier));
+            }
+        }
+
         public float EffectiveHpMultiplier =>
             CustomizeMultipliers ? HpMultiplier : DifficultyPresets[SelectedDifficultyIndex].HpMultiplier;
 
         public float EffectiveDmgMultiplier =>
             CustomizeMultipliers ? DmgMultiplier : DifficultyPresets[SelectedDifficultyIndex].DmgMultiplier;
 
+        public float EffectiveResourceMultiplier =>
+            CustomizeMultipliers ? ResourceMultiplier : DifficultyPresets[SelectedDifficultyIndex].ResourceMultiplier;
+
         private void OnMultiplierSourceChanged() {
             OnPropertyChanged(nameof(EffectiveHpMultiplier));
             OnPropertyChanged(nameof(EffectiveDmgMultiplier));
+            OnPropertyChanged(nameof(EffectiveResourceMultiplier));
         }
 
         private bool TrySetMultiplierText(
@@ -206,7 +249,7 @@ namespace AIUnitBuff {
             return true;
         }
 
-        private static DifficultyLabel[] CreateDifficultyLabels(Func<(string Name, float DmgMultiplier, float HpMultiplier), string> textSelector) {
+        private static DifficultyLabel[] CreateDifficultyLabels(Func<(string Name, float DmgMultiplier, float HpMultiplier, float ResourceMultiplier), string> textSelector) {
             DifficultyLabel[] labels = new DifficultyLabel[DifficultyPresets.Length];
 
             for (int i = 0; i < DifficultyPresets.Length; i++) {
