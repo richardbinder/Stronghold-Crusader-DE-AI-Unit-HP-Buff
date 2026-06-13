@@ -11,14 +11,15 @@ using SHCDESE.Interop;
 
 namespace AIUnitBuff {
     internal class ResourceMultiplierService {
+        private const int ResourceBonusAccumulatorScale = 10000;
+
         private readonly GamePlayerManagerAPI _playerManager = GamePlayerManagerAPI.Instance;
         private readonly GameBuildingManagerAPI _buildingManager = GameBuildingManagerAPI.Instance;
         private readonly SettingsService _settings;
         private readonly ManualLogSource _logger;
 
-        private readonly Random _resourceBonusRandom = new Random();
-        private readonly object _resourceBonusRandomLock = new object();
         private readonly Dictionary<(int PlayerId, eGoods Good), int> _trackedResourcesToIgnore = new();
+        private readonly Dictionary<(int PlayerId, eGoods Good), int> _resourceBonusRemainders = new();
 
         public ResourceMultiplierService(SettingsService settings, ManualLogSource logger) {
             _settings = settings;
@@ -27,6 +28,7 @@ namespace AIUnitBuff {
 
         public void ClearTrackedResources() {
             _trackedResourcesToIgnore.Clear();
+            _resourceBonusRemainders.Clear();
         }
 
         public unsafe void ModifyStoredGoodsAdded(AddGoodToGoodsyardEventArgs e) {
@@ -64,7 +66,7 @@ namespace AIUnitBuff {
             }
 
             int amountToModify = e.AddAmount - ignoredAmount;
-            int bonusAmount = GetBonusStoredGoodsAmount(amountToModify, _settings.ResourceMultiplier);
+            int bonusAmount = GetBonusStoredGoodsAmount(playerId, e.Good, amountToModify, _settings.ResourceMultiplier);
 
             if (bonusAmount <= 0)
                 return;
@@ -116,33 +118,42 @@ namespace AIUnitBuff {
             return;
         }
 
-        private int GetBonusStoredGoodsAmount(int originalAmount, float multiplier) {
+        private int GetBonusStoredGoodsAmount(int playerId, eGoods good, int originalAmount, float multiplier) {
             if (originalAmount <= 0)
                 return 0;
 
             float clampedMultiplier = Constants.ClampResourceMultiplier(multiplier);
+            double bonusAmountWithRemainder = originalAmount * clampedMultiplier - originalAmount + GetStoredResourceBonusRemainder(playerId, good);
 
-            double bonusAmount = originalAmount * (clampedMultiplier - 1.0f);
-
-            if (bonusAmount <= 0.0)
+            if (bonusAmountWithRemainder <= 0.0)
                 return 0;
 
-            // Bonus resources can only be integers, so fractional bonuses roll for one extra resource.
-            int guaranteedBonusAmount = (int)Math.Floor(bonusAmount);
-            double extraResourceChance = bonusAmount - guaranteedBonusAmount;
+            int bonusAmount = (int)Math.Floor(bonusAmountWithRemainder);
+            double newRemainder = bonusAmountWithRemainder - bonusAmount;
 
-            if (RollResourceBonusChance(extraResourceChance))
-                guaranteedBonusAmount++;
+            StoreResourceBonusRemainder(playerId, good, newRemainder);
 
-            return guaranteedBonusAmount;
+            return bonusAmount;
         }
 
-        private bool RollResourceBonusChance(double chance) {
-            if (chance <= 0.0)
-                return false;
+        private double GetStoredResourceBonusRemainder(int playerId, eGoods good) {
+            var key = (playerId, good);
 
-            lock (_resourceBonusRandomLock) {
-                return _resourceBonusRandom.NextDouble() < chance;
+            if (!_resourceBonusRemainders.TryGetValue(key, out int storedRemainder))
+                return 0.0;
+
+            return storedRemainder / (double)ResourceBonusAccumulatorScale;
+        }
+
+        private void StoreResourceBonusRemainder(int playerId, eGoods good, double remainder) {
+            var key = (playerId, good);
+            // Store remainders as integers, not float, because accumulating floating point operations may be unreliable and lead to desync issues in multiplayer
+            int scaledRemainder = (int)Math.Round(remainder * ResourceBonusAccumulatorScale);
+
+            if (scaledRemainder > 0) {
+                _resourceBonusRemainders[key] = scaledRemainder;
+            } else {
+                _resourceBonusRemainders.Remove(key);
             }
         }
     }
