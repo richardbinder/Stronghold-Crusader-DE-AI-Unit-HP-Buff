@@ -3,3 +3,4 @@ bin/
 obj/
 /AIUnitBuff.csproj
 /AIUnitBuff.slnx
+/Override/Assets/GUI/Sprites/AIUnitBuff.png
