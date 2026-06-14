@@ -1,3 +1,5 @@
 .vs/
 bin/
 obj/
+/AIUnitBuff.csproj
+/AIUnitBuff.slnx
