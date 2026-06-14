@@ -11,7 +11,7 @@ using BepInEx.Logging;
 using MessagePack;
 using SHCDESE.API;
 
-namespace AIUnitBuff {
+namespace AIBuff {
     internal class SettingsService : IDisposable {
         private readonly GamePlayerManagerAPI PlayerManager = GamePlayerManagerAPI.Instance;
         private readonly ConfigFile _config;

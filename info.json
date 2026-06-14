@@ -1,12 +1,12 @@
 {
-	"GUID": "AIUnitBuff",
+	"GUID": "AIBuff",
 	"Author": "Copperazide",
-	"Name": "AI Unit HP Buff",
-	"Description": "Allows players to configure HP and damage multipliers for AI units. This allows you to make AI extra challenging (...or extra weak).",
+	"Name": "AI Buff",
+	"Description": "Allows players to configure resource, HP, and damage multipliers for AI players. This allows you to make AI extra challenging (...or extra weak).",
 	"Version": "1.0.0",
 	"SupportedGameVersions": [
 		"2.5.0.1"
 	],
-	"Website": "https://github.com/richardbinder/Stronghold-Crusader-DE-AI-Unit-HP-Buff",
+	"Website": "https://github.com/richardbinder/Stronghold-Crusader-DE-AI-Buff",
 	"Manifest": 1
 }

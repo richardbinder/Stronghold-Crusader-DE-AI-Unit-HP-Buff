@@ -10,9 +10,9 @@ using SHCDESE.EventAPI.MapLoader;
 using SHCDESE.EventAPI.Player;
 using SHCDESE.EventAPI.Units;
 
-namespace AIUnitBuff {
+namespace AIBuff {
     [BepInDependency("000shcdese", BepInDependency.DependencyFlags.HardDependency)]
-    [BepInPlugin("AIUnitBuff", "AI Unit Buff", "1.0.0")]
+    [BepInPlugin("AIBuff", "AI Buff", "1.0.0")]
     public class Plugin : BaseUnityPlugin {
         private LobbySettingsModel _lobbySettings;
         private SettingsService _settings;
@@ -24,7 +24,7 @@ namespace AIUnitBuff {
             _unitDamageService = new UnitDamageService(_settings, Logger);
             _resourceMultiplierService = new ResourceMultiplierService(_settings, Logger);
 
-            Logger.LogInfo("AI Unit Buff loaded.");
+            Logger.LogInfo("AI Buff loaded.");
 
             CrusaderLibrary.Instance.LibraryLoaded += OnLibraryLoaded;
 
@@ -32,7 +32,7 @@ namespace AIUnitBuff {
             MapLoaderR3EventHooks.OnUnloadMap.Observable.Subscribe(OnMapUnload);
 
             ModSaveDataAPI.Instance.RegisterModDataHandler(
-                modIdentifier: "AIUnitBuff-savedata",
+                modIdentifier: "AIBuff-savedata",
                 saveCallback: OnSave,
                 loadCallback: OnLoad
             );
@@ -43,7 +43,7 @@ namespace AIUnitBuff {
 
             GameXAMLManagerAPI.Instance.RegisterLobbyModSettings(
                 plugin: this,
-                modName: "AIUnitBuff",
+                modName: "AIBuff",
                 viewModel: _lobbySettings,
                 xamlSourceFile: "LobbySettings.xaml"
             );

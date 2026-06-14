@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using BepInEx.Configuration;
 
-namespace AIUnitBuff {
+namespace AIBuff {
     public class DebugConfig {
         public ConfigEntry<float> HpMultiplier { get; set; }
         public ConfigEntry<float> DmgMultiplier { get; set; }

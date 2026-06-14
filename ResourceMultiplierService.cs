@@ -9,7 +9,7 @@ using SHCDESE.Extensions;
 using SHCDESE.GameGlobals;
 using SHCDESE.Interop;
 
-namespace AIUnitBuff {
+namespace AIBuff {
     internal class ResourceMultiplierService {
         private const int ResourceBonusAccumulatorScale = 10000;
 

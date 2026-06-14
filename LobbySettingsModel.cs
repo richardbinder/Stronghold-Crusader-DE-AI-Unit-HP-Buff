@@ -4,7 +4,7 @@ using SHCDESE.API.Components.Network;
 using SHCDESE.EventAPI;
 using SHCDESE.ViewModels;
 
-namespace AIUnitBuff {
+namespace AIBuff {
     public class LobbySettingsModel : LobbyModSettingsBaseViewModel
     {
         private static readonly (string Name, float DmgMultiplier, float HpMultiplier, float ResourceMultiplier)[] DifficultyPresets = [

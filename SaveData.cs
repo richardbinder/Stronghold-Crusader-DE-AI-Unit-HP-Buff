@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MessagePack;
 
-namespace AIUnitBuff {
+namespace AIBuff {
 
     [MessagePackObject(true)]
     public class SaveData {

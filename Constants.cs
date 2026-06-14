@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using SHCDESE.Interop;
 
-namespace AIUnitBuff {
+namespace AIBuff {
     public class Constants {
         public const float DefaultHpMultiplier = 1.0f;
         public const float DefaultDmgMultiplier = 1.0f;

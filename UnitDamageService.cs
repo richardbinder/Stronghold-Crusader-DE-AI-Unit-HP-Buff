@@ -5,7 +5,7 @@ using SHCDESE.EventAPI;
 using SHCDESE.EventAPI.Units;
 using SHCDESE.Interop;
 
-namespace AIUnitBuff {
+namespace AIBuff {
     internal class UnitDamageService {
         private readonly GameUnitManagerAPI _unitManager = GameUnitManagerAPI.Instance;
         private readonly GamePlayerManagerAPI _playerManager = GamePlayerManagerAPI.Instance;
